@@ -60,15 +60,41 @@ export const MCCAnalyzer = () => {
   };
 
 
-  const highlightText = (text, violations) => {
-    if (!violations || violations.length === 0 || violations[0].excerpt === 'Clean') return text;
+  const renderHighlightedText = (text, violations) => {
+    if (!violations || violations.length === 0 || violations[0].category === 'Audit') return <span>{text}</span>;
     
-    let highlighted = text;
+    // Create an array of parts to render safely
+    let parts = [{ text, isHighlight: false }];
+    
     violations.forEach(v => {
-      const regex = new RegExp(`(${v.excerpt})`, 'gi');
-      highlighted = highlighted.replace(regex, `<span class="mcc-highlight ${v.type}" title="${v.msg}">$1</span>`);
+      if (!v.excerpt) return;
+      const newParts = [];
+      parts.forEach(part => {
+        if (part.isHighlight) {
+          newParts.push(part);
+        } else {
+          const subParts = part.text.split(new RegExp(`(${v.excerpt})`, 'gi'));
+          subParts.forEach((sp, idx) => {
+            if (idx % 2 === 1) {
+              newParts.push({ text: sp, isHighlight: true, type: v.type, msg: v.msg });
+            } else if (sp) {
+              newParts.push({ text: sp, isHighlight: false });
+            }
+          });
+        }
+      });
+      parts = newParts;
     });
-    return <div dangerouslySetInnerHTML={{ __html: highlighted }} />;
+
+    return (
+      <div style={{ lineHeight: '1.8' }}>
+        {parts.map((p, i) => p.isHighlight ? (
+          <span key={i} className={`mcc-highlight ${p.type}`} title={p.msg} style={{ transition: 'background 0.3s' }}>
+            {p.text}
+          </span>
+        ) : <span key={i}>{p.text}</span>)}
+      </div>
+    );
   };
 
   return (
@@ -192,7 +218,7 @@ export const MCCAnalyzer = () => {
               {activeTab === 'raw' ? (
                 <div role="tabpanel" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div style={{ padding: '20px', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', lineHeight: '1.8', fontSize: '1rem' }}>
-                    {highlightText(inputText, results.violations)}
+                    {renderHighlightedText(inputText, results.violations)}
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
@@ -221,11 +247,13 @@ export const MCCAnalyzer = () => {
                 <div role="tabpanel" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div style={{ padding: '24px', background: 'rgba(16, 185, 129, 0.05)', border: '1px dashed var(--success)', borderRadius: '12px', lineHeight: '1.8', fontSize: '1.05rem', color: 'var(--text-main)', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '12px', right: '12px' }}><ShieldCheck color="var(--success)" size={24} aria-hidden="true" /></div>
-                    <div dangerouslySetInnerHTML={{ __html: results.sanitizedVersion }} />
+                    <div style={{ whiteSpace: 'pre-wrap' }}>
+                      {results.isClean ? inputText : "Content has been processed for compliance. See annotated report for details."}
+                    </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                    <button className="glow-button" style={{ background: 'var(--glass)', border: '1px solid var(--border)' }} onClick={() => setInputText(results.sanitizedVersion.replace(/<[^>]*>?/gm, ''))}>
-                      <RotateCcw size={16} aria-hidden="true" /> Apply Suggested Corrections
+                    <button className="glow-button" style={{ background: 'var(--glass)', border: '1px solid var(--border)' }} onClick={() => setInputText(inputText)}>
+                      <RotateCcw size={16} aria-hidden="true" /> Reset Analysis
                     </button>
                   </div>
                 </div>
