@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { ExternalLink, TrendingUp, BarChart3, Plus } from 'lucide-react';
 
@@ -18,6 +17,7 @@ export const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   </div>
 );
 
+export const MetricCard = ({ title, value, icon: Icon, subtext, trend, color, link }) => (
   <div 
     className="glass-panel metric-card" 
     onClick={() => link && window.open(link, '_blank')} 

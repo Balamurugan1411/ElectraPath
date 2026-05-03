@@ -3,7 +3,7 @@
  * Implements real-time heuristic auditing of electoral content using the Electra Neural Engine.
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   AlertTriangle, ScanSearch, CheckCircle2, FileSearch, 
@@ -18,52 +18,53 @@ import { analyzeMCC } from '../../services/AIEngine';
  * @component
  */
 export const MCCAnalyzer = () => {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [analysisStep, setAnalysisStep] = useState(0);
-  const [activeTab, setActiveTab] = useState('raw'); // 'raw' or 'sanitized'
+  const [activeTab, setActiveTab] = useState('raw');
 
   const steps = [
-    "Initializing Electra NLP Engine...",
-    "Tokenizing & Extracting Entities...",
-    "Cross-referencing ECI Guidelines...",
-    "Synthesizing Compliance Report..."
+    "Initializing Neural Pipeline...",
+    "Tokenizing Input Stream...",
+    "Scanning Heuristic Patterns...",
+    "Neural Model Validation...",
+    "Finalizing Audit Report..."
   ];
 
-  useEffect(() => {
-    if (isAnalyzing) {
-      const interval = setInterval(() => {
-        setAnalysisStep(prev => (prev < steps.length - 1 ? prev + 1 : prev));
-      }, 600);
-      return () => clearInterval(interval);
-    } else {
-      setAnalysisStep(0);
-    }
-  }, [isAnalyzing]);
-
-  const analyzeContent = async () => {
+  const handleAnalyze = async () => {
     if (!inputText.trim()) return;
+    
     setIsAnalyzing(true);
     setResults(null);
-    setActiveTab('raw');
+    setAnalysisStep(0);
+
+    // Simulated progress steps
+    for (let i = 0; i < steps.length; i++) {
+      setAnalysisStep(i);
+      await new Promise(r => setTimeout(r, 600));
+    }
 
     try {
-      const data = await analyzeMCC(inputText);
-      setResults(data);
+      const report = await analyzeMCC(inputText);
+      setResults(report);
     } catch (error) {
-      console.error("Analysis failed:", error);
-      alert("AI Audit failed. Please try again.");
+      console.error("Analysis Failed:", error);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-
+  /**
+   * Safely renders highlighted text without using dangerouslySetInnerHTML.
+   * @param {string} text 
+   * @param {Object[]} violations 
+   */
   const renderHighlightedText = (text, violations) => {
-    if (!violations || violations.length === 0 || violations[0].category === 'Audit') return <span>{text}</span>;
+    if (!violations || violations.length === 0 || violations[0].category === 'Audit') {
+      return <span>{text}</span>;
+    }
     
-    // Create an array of parts to render safely
     let parts = [{ text, isHighlight: false }];
     
     violations.forEach(v => {
@@ -103,52 +104,59 @@ export const MCCAnalyzer = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <h2 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <ScanSearch size={28} color="var(--primary)" /> AI MCC Analyzer
+            <ScanSearch size={28} color="var(--primary)" aria-hidden="true" /> AI MCC Analyzer
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '8px' }}>
             Advanced NLP screening for electoral compliance and ethical campaigning.
           </p>
         </div>
-        <div className="live-badge">
-          <div className="live-dot"></div>
-          GEMINI AI • LIVE
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(99, 102, 241, 0.1)', padding: '6px 12px', borderRadius: '20px', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
+          <div className="neural-ping" aria-hidden="true"></div>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', letterSpacing: '0.05em' }}>GOD-MODE ACTIVE</span>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '24px' }}>
-        {/* Main Input Area */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
+        {/* Main Analysis Area */}
         <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h4 id="analysis-source-label" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FileSearch size={18} aria-hidden="true" /> Source Analysis</h4>
-            <div style={{ display: 'flex', gap: '8px' }}>
-               <div className="glass-panel" style={{ padding: '4px 12px', display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid var(--success)' }}>
-                  <ShieldCheck size={14} color="var(--success)" aria-hidden="true" />
-                  <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--success)' }}>SECURE LOCAL AUDIT</span>
-               </div>
-            </div>
+            <label htmlFor="mcc-input" style={{ fontSize: '0.9rem', fontWeight: 600 }}>Electoral Content for Audit</label>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{inputText.length} characters</span>
           </div>
-
+          
           <textarea 
+            id="mcc-input"
+            className="glass-panel"
+            placeholder="Paste campaign speech, transcript, or social media post here for deep neural audit..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            aria-labelledby="analysis-source-label"
-            placeholder="Paste transcript, speech excerpt, or social media post here for real-time AI audit..."
-            style={{ width: '100%', height: '220px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)', borderRadius: '12px', padding: '20px', color: 'white', resize: 'none', fontSize: '0.95rem', fontFamily: 'inherit', lineHeight: '1.6' }}
+            style={{ 
+              width: '100%', 
+              height: '180px', 
+              padding: '20px', 
+              background: 'rgba(0,0,0,0.2)', 
+              color: 'white', 
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              resize: 'none',
+              fontSize: '0.95rem',
+              lineHeight: '1.6',
+              fontFamily: 'inherit'
+            }}
           />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <ShieldCheck size={14} color="var(--success)" aria-hidden="true" /> 
-              <span>Heuristic Security Enabled</span>
-            </span>
+          <div style={{ display: 'flex', gap: '12px' }}>
             <button 
               className="glow-button" 
-              onClick={analyzeContent} 
-              disabled={isAnalyzing || !inputText.trim()} 
-              style={{ padding: '12px 32px' }}
-              aria-busy={isAnalyzing}
+              onClick={handleAnalyze}
+              disabled={isAnalyzing || !inputText.trim()}
+              style={{ flex: 1, height: '48px', opacity: (isAnalyzing || !inputText.trim()) ? 0.6 : 1 }}
             >
-              {isAnalyzing ? 'Analyzing...' : 'Run Neural Audit'}
+              {isAnalyzing ? (
+                <><Cpu size={18} className="rotating" aria-hidden="true" /> Analyzing...</>
+              ) : (
+                <><Zap size={18} aria-hidden="true" /> Run Neural Audit</>
+              )}
             </button>
           </div>
         </div>
@@ -194,7 +202,13 @@ export const MCCAnalyzer = () => {
 
       <AnimatePresence>
         {results && !isAnalyzing && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel" style={{ overflow: 'hidden' }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -20 }}
+            className="glass-panel" 
+            style={{ overflow: 'hidden' }}
+          >
             <div role="tablist" style={{ display: 'flex', borderBottom: '1px solid var(--border)' }}>
               <button 
                 role="tab"
@@ -202,7 +216,7 @@ export const MCCAnalyzer = () => {
                 onClick={() => setActiveTab('raw')}
                 style={{ flex: 1, padding: '16px', background: activeTab === 'raw' ? 'rgba(255,255,255,0.05)' : 'transparent', border: 'none', color: activeTab === 'raw' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
               >
-                <FileSearch size={18} aria-hidden="true" /> Annotated Report
+                <FileSearch size={18} aria-hidden="true" /> <span>Annotated Report</span>
               </button>
               <button 
                 role="tab"
@@ -210,7 +224,7 @@ export const MCCAnalyzer = () => {
                 onClick={() => setActiveTab('sanitized')}
                 style={{ flex: 1, padding: '16px', background: activeTab === 'sanitized' ? 'rgba(255,255,255,0.05)' : 'transparent', border: 'none', color: activeTab === 'sanitized' ? 'var(--success)' : 'var(--text-muted)', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
               >
-                <Sparkles size={18} aria-hidden="true" /> AI Sanitized Version
+                <Sparkles size={18} aria-hidden="true" /> <span>AI Sanitized Version</span>
               </button>
             </div>
             
@@ -246,7 +260,7 @@ export const MCCAnalyzer = () => {
               ) : (
                 <div role="tabpanel" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <div style={{ padding: '24px', background: 'rgba(16, 185, 129, 0.05)', border: '1px dashed var(--success)', borderRadius: '12px', lineHeight: '1.8', fontSize: '1.05rem', color: 'var(--text-main)', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: '12px', right: '12px' }}><ShieldCheck color="var(--success)" size={24} aria-hidden="true" /></div>
+                    <div style={{ position: 'absolute', top: '12px', right: '12px' }} aria-hidden="true"><ShieldCheck color="var(--success)" size={24} /></div>
                     <div style={{ whiteSpace: 'pre-wrap' }}>
                       {results.isClean ? inputText : "Content has been processed for compliance. See annotated report for details."}
                     </div>
@@ -263,7 +277,7 @@ export const MCCAnalyzer = () => {
             {/* Neural Trace Terminal */}
             <div style={{ background: '#0a0a0a', borderTop: '1px solid var(--border)', padding: '16px', fontFamily: 'monospace', fontSize: '0.7rem' }}>
                <div style={{ color: 'var(--primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Zap size={12} /> NEURAL_PROCESS_TRACE v4.0
+                  <Zap size={12} aria-hidden="true" /> NEURAL_PROCESS_TRACE v4.2
                </div>
                <div style={{ color: '#4ade80' }}>[OK] Pipeline initialized in {results.confidenceScore > 95 ? 'Fast' : 'Deep'} mode.</div>
                <div style={{ color: '#60a5fa' }}>[INFO] Audit context: ECI_MCC_2026_V1</div>
@@ -273,7 +287,6 @@ export const MCCAnalyzer = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 };
@@ -294,4 +307,3 @@ const CategoryBar = ({ label, value, color }) => (
     </div>
   </div>
 );
-
