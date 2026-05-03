@@ -2,7 +2,6 @@
 
 **ElectraPath AI** is a state-of-the-art civic intelligence platform designed for the 2026 Elections. It leverages a multi-stage Neural Audit Pipeline to ensure electoral compliance, candidate transparency, and voter empowerment.
 
-![ElectraPath AI Banner](https://api.dicebear.com/7.x/shapes/svg?seed=ElectraPath&backgroundColor=6366f1)
 
 ## 🚀 Key Features
 
