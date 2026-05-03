@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @fileoverview ComplianceMonitor View
+ * Provides a real-time, "God-Mode" monitoring interface for electoral compliance activity.
+ */
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, ShieldAlert, CheckCircle, Zap, Globe, Cpu } from 'lucide-react';
+import { ShieldAlert, CheckCircle, Zap, Cpu } from 'lucide-react';
 
+/**
+ * ComplianceMonitor component for real-time neural feed tracking.
+ * @component
+ */
 const ComplianceMonitor = () => {
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState({
@@ -45,17 +53,17 @@ const ComplianceMonitor = () => {
   }, []);
 
   return (
-    <div className="compliance-monitor-container" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '20px' }}>
+    <div className="compliance-monitor-container" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '20px' }} role="main" aria-label="Compliance Monitor">
       <div className="main-monitor glass-panel" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="neural-ping"></div>
+            <div className="neural-ping" aria-hidden="true"></div>
             <h3 style={{ margin: 0 }}>Neural Compliance Feed</h3>
           </div>
           <div className="badge-neural">GOD-MODE ACTIVE</div>
         </div>
 
-        <div className="log-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="log-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} role="log" aria-live="polite">
           <AnimatePresence initial={false}>
             {logs.map(log => (
               <motion.div
@@ -79,7 +87,7 @@ const ComplianceMonitor = () => {
                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{log.region}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {log.status === 'FLAGGED' ? <ShieldAlert size={14} color="#ef4444" /> : <CheckCircle size={14} color="#10b981" />}
+                  {log.status === 'FLAGGED' ? <ShieldAlert size={14} color="#ef4444" aria-hidden="true" /> : <CheckCircle size={14} color="#10b981" aria-hidden="true" />}
                   <span style={{ fontSize: '0.7rem', fontWeight: 700, color: log.status === 'FLAGGED' ? '#ef4444' : '#10b981' }}>{log.status}</span>
                 </div>
               </motion.div>
@@ -87,19 +95,18 @@ const ComplianceMonitor = () => {
           </AnimatePresence>
         </div>
 
-        {/* Neural Grid Overlay */}
         <div style={{
           position: 'absolute',
           top: 0, left: 0, right: 0, bottom: 0,
           background: 'radial-gradient(circle at 50% 50%, transparent 80%, rgba(99, 102, 241, 0.05))',
           pointerEvents: 'none'
-        }}></div>
+        }} aria-hidden="true"></div>
       </div>
 
       <div className="stats-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <div className="glass-panel" style={{ padding: '20px' }}>
+        <div className="glass-panel" style={{ padding: '20px' }} role="region" aria-label="System Health">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: 'var(--primary)' }}>
-            <Cpu size={18} />
+            <Cpu size={18} aria-hidden="true" />
             <span style={{ fontWeight: 600 }}>System Health</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -109,23 +116,26 @@ const ComplianceMonitor = () => {
           </div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), transparent)' }}>
+        <div className="glass-panel" style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1), transparent)' }} role="alert">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: '#ef4444' }}>
-            <ShieldAlert size={18} />
+            <ShieldAlert size={18} aria-hidden="true" />
             <span style={{ fontWeight: 600 }}>Threat Alert</span>
           </div>
           <h2 style={{ margin: '0 0 4px', color: '#ef4444' }}>{stats.activeThreats}</h2>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>Anomalies requiring manual review</p>
         </div>
 
-        <button className="glow-button" style={{ width: '100%' }}>
-          <Zap size={14} /> Run Global Audit
+        <button className="glow-button" style={{ width: '100%' }} aria-label="Initiate manual global audit">
+          <Zap size={14} aria-hidden="true" /> Run Global Audit
         </button>
       </div>
     </div>
   );
 };
 
+/**
+ * Helper component for displaying a statistical row.
+ */
 const StatRow = ({ label, value, color }) => (
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{label}</span>

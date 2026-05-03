@@ -1,7 +1,14 @@
+/**
+ * @fileoverview AIAssistant Component
+ * High-fidelity conversational AI for electoral guidance.
+ */
 import { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, ScrollText, MapPin, Send, Sparkles } from 'lucide-react';
 import { getAIResponse } from '../../services/AIEngine';
 
+/**
+ * AI Assistant view for the dashboard sidebar.
+ */
 export const AIAssistant = () => {
   const [messages, setMessages] = useState([
     { role: 'ai', text: "Hello! I'm Electra, your AI assistant. How can I help you navigate the 2026 Elections?" }
@@ -41,7 +48,7 @@ export const AIAssistant = () => {
            originalQuery: userMsg
          }]);
       }
-    } catch (error) {
+    } catch {
 
       setMessages(prev => [...prev, { role: 'ai', text: "I'm having trouble connecting to my knowledge base. Please try again." }]);
     } finally {

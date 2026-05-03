@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+/**
+ * @fileoverview QuizView Component
+ * Provides an interactive, gamified electoral literacy experience.
+ */
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trophy, Star, CheckCircle2, 
@@ -6,6 +10,10 @@ import {
   Flame, Zap, Heart, Target
 } from 'lucide-react';
 
+/**
+ * QuizView component for gamified civic education.
+ * @component
+ */
 export const QuizView = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -83,13 +91,13 @@ export const QuizView = () => {
   const progress = ((currentQuestion + (isAnswered ? 1 : 0)) / questions.length) * 100;
 
   return (
-    <div style={{ maxWidth: '850px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ maxWidth: '850px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }} role="application" aria-label="Electoral Literacy Quiz">
       {/* Gamified Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <StatBox icon={<Heart size={16} color="var(--danger)" fill="var(--danger)" />} label="Lives" value={lives} />
-          <StatBox icon={<Flame size={16} color="#ff4d00" fill="#ff4d00" />} label="Streak" value={streak} />
-          <StatBox icon={<Star size={16} color="var(--warning)" fill="var(--warning)" />} label="XP" value={score * 150} />
+        <div style={{ display: 'flex', gap: '16px' }} role="status" aria-label="Quiz Stats">
+          <StatBox icon={<Heart size={16} color="var(--danger)" fill="var(--danger)" aria-hidden="true" />} label="Lives" value={lives} />
+          <StatBox icon={<Flame size={16} color="#ff4d00" fill="#ff4d00" aria-hidden="true" />} label="Streak" value={streak} />
+          <StatBox icon={<Star size={16} color="var(--warning)" fill="var(--warning)" aria-hidden="true" />} label="XP" value={score * 150} />
         </div>
         <div style={{ textAlign: 'right' }}>
            <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)' }}>LEVEL 4 CITIZEN</div>
@@ -98,7 +106,7 @@ export const QuizView = () => {
       </div>
 
       {/* Progress Bar */}
-      <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+      <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }} role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">
         <motion.div 
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -116,8 +124,7 @@ export const QuizView = () => {
             className="glass-panel" 
             style={{ padding: '40px', position: 'relative', overflow: 'hidden' }}
           >
-            {/* Background Glow */}
-            <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '200px', height: '200px', background: 'var(--primary-glow)', filter: 'blur(80px)', zIndex: 0, opacity: 0.5 }}></div>
+            <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '200px', height: '200px', background: 'var(--primary-glow)', filter: 'blur(80px)', zIndex: 0, opacity: 0.5 }} aria-hidden="true"></div>
 
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
@@ -128,7 +135,7 @@ export const QuizView = () => {
 
               <h2 style={{ marginBottom: '32px', lineHeight: '1.4', fontSize: '1.6rem' }}>{questions[currentQuestion].question}</h2>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} role="radiogroup" aria-label="Quiz Options">
                 {questions[currentQuestion].options.map((opt, i) => {
                   let status = 'default';
                   if (isAnswered) {
@@ -154,10 +161,12 @@ export const QuizView = () => {
                     initial={{ opacity: 0, y: 20 }} 
                     animate={{ opacity: 1, y: 0 }}
                     style={{ marginTop: '32px', padding: '24px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border)' }}
+                    role="complementary"
+                    aria-label="Explanation"
                   >
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                       <div style={{ padding: '10px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '12px' }}>
-                        <Award size={24} color="var(--primary)" />
+                        <Award size={24} color="var(--primary)" aria-hidden="true" />
                       </div>
                       <div>
                         <div style={{ fontWeight: 800, fontSize: '0.9rem', marginBottom: '4px' }}>CIVIC INSIGHT</div>
@@ -165,8 +174,8 @@ export const QuizView = () => {
                       </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                      <button className="glow-button" onClick={nextQuestion} style={{ padding: '12px 30px' }}>
-                        {currentQuestion + 1 === questions.length ? 'See Results' : 'Next Mission'} <ChevronRight size={18} />
+                      <button className="glow-button" onClick={nextQuestion} style={{ padding: '12px 30px' }} aria-label={currentQuestion + 1 === questions.length ? 'See Results' : 'Next Mission'}>
+                        {currentQuestion + 1 === questions.length ? 'See Results' : 'Next Mission'} <ChevronRight size={18} aria-hidden="true" />
                       </button>
                     </div>
                   </motion.div>
@@ -181,11 +190,13 @@ export const QuizView = () => {
             animate={{ opacity: 1, y: 0 }}
             className="glass-panel" 
             style={{ padding: '60px', textAlign: 'center' }}
+            role="region"
+            aria-label="Quiz Results"
           >
             <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto 32px' }}>
-               <div className="pulse" style={{ position: 'absolute', inset: 0, background: 'var(--warning)', borderRadius: '50%', opacity: 0.2 }}></div>
+               <div className="pulse" style={{ position: 'absolute', inset: 0, background: 'var(--warning)', borderRadius: '50%', opacity: 0.2 }} aria-hidden="true"></div>
                <div style={{ position: 'absolute', inset: '10px', background: 'var(--warning)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', zIndex: 1 }}>
-                  {lives <= 0 ? <XCircle size={48} /> : <Trophy size={48} />}
+                  {lives <= 0 ? <XCircle size={48} aria-hidden="true" /> : <Trophy size={48} aria-hidden="true" />}
                </div>
             </div>
 
@@ -195,14 +206,14 @@ export const QuizView = () => {
             </p>
             
             <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginBottom: '48px' }}>
-              <ResultStat icon={<Target size={20} />} label="Accuracy" value={`${(score/questions.length)*100}%`} />
-              <ResultStat icon={<Zap size={20} />} label="Total XP" value={score * 150} />
-              <ResultStat icon={<Trophy size={20} />} label="Badge" value={score === questions.length ? "Gold" : "Silver"} />
+              <ResultStat icon={<Target size={20} aria-hidden="true" />} label="Accuracy" value={`${(score/questions.length)*100}%`} />
+              <ResultStat icon={<Zap size={20} aria-hidden="true" />} label="Total XP" value={score * 150} />
+              <ResultStat icon={<Trophy size={20} aria-hidden="true" />} label="Badge" value={score === questions.length ? "Gold" : "Silver"} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-              <button className="glow-button" style={{ background: 'var(--glass)', border: '1px solid var(--border)', padding: '14px 28px' }} onClick={resetQuiz}>
-                <RotateCcw size={18} /> Restart Mission
+              <button className="glow-button" style={{ background: 'var(--glass)', border: '1px solid var(--border)', padding: '14px 28px' }} onClick={resetQuiz} aria-label="Restart Mission">
+                <RotateCcw size={18} aria-hidden="true" /> Restart Mission
               </button>
               <button className="glow-button" style={{ padding: '14px 32px' }}>Claim NFT Badge</button>
             </div>
@@ -213,6 +224,9 @@ export const QuizView = () => {
   );
 };
 
+/**
+ * Helper component for displaying a statistical box.
+ */
 const StatBox = ({ icon, label, value }) => (
   <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.03)' }}>
     {icon}
@@ -223,6 +237,9 @@ const StatBox = ({ icon, label, value }) => (
   </div>
 );
 
+/**
+ * Helper component for displaying a quiz option.
+ */
 const QuizOption = ({ text, status, onClick, disabled }) => {
   let borderColor = 'var(--border)';
   let bg = 'rgba(255,255,255,0.03)';
@@ -244,20 +261,26 @@ const QuizOption = ({ text, status, onClick, disabled }) => {
       onClick={onClick}
       disabled={disabled}
       className="glass-panel"
+      role="radio"
+      aria-checked={status !== 'default'}
       style={{ 
         padding: '20px', textAlign: 'left', border: `1px solid ${borderColor}`, 
         background: bg, color: color, cursor: disabled ? 'default' : 'pointer',
+        width: '100%',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         transition: 'all 0.2s ease', position: 'relative', overflow: 'hidden'
       }}
     >
       <span style={{ fontWeight: 600, fontSize: '1rem' }}>{text}</span>
-      {status === 'correct' && <CheckCircle2 size={20} color="var(--success)" />}
-      {status === 'wrong' && <XCircle size={20} color="var(--danger)" />}
+      {status === 'correct' && <CheckCircle2 size={20} color="var(--success)" aria-hidden="true" />}
+      {status === 'wrong' && <XCircle size={20} color="var(--danger)" aria-hidden="true" />}
     </motion.button>
   );
 };
 
+/**
+ * Helper component for displaying a result statistic.
+ */
 const ResultStat = ({ icon, label, value }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
     <div style={{ color: 'var(--primary)', display: 'flex', justifyContent: 'center' }}>{icon}</div>
