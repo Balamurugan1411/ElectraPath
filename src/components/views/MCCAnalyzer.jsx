@@ -231,9 +231,21 @@ export const MCCAnalyzer = () => {
                 </div>
               )}
             </div>
+
+            {/* Neural Trace Terminal */}
+            <div style={{ background: '#0a0a0a', borderTop: '1px solid var(--border)', padding: '16px', fontFamily: 'monospace', fontSize: '0.7rem' }}>
+               <div style={{ color: 'var(--primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Zap size={12} /> NEURAL_PROCESS_TRACE v4.0
+               </div>
+               <div style={{ color: '#4ade80' }}>[OK] Pipeline initialized in {results.confidenceScore > 95 ? 'Fast' : 'Deep'} mode.</div>
+               <div style={{ color: '#60a5fa' }}>[INFO] Audit context: ECI_MCC_2026_V1</div>
+               <div style={{ color: '#fbbf24' }}>[WARN] Entropy level: {(100 - results.confidenceScore).toFixed(1)}%</div>
+               <div style={{ color: 'var(--text-muted)' }}>[DEBUG] Processed at: {results.processedAt}</div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 };

@@ -403,6 +403,7 @@ body.theme-light .metric-card:hover .metric-icon {
   height: 100vh;
   position: sticky;
   top: 0;
+  overflow-y: auto;
 }
 
 .chat-container {
@@ -411,6 +412,7 @@ body.theme-light .metric-card:hover .metric-icon {
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
+  min-height: 0;
   padding-right: 8px;
   margin: 12px 0;
 }
