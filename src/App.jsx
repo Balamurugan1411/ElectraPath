@@ -71,8 +71,8 @@ function App() {
     { name: 'K. Meena', party: 'XYZ Party', age: 44, education: 'M.Sc', assets: '₹1.8 Cr', cases: 0, color: '#138808', image: '/candidates/meena.png', predictionScore: 89 },
     { name: 'J. Balaji', party: 'LMN Front', age: 48, education: 'Ph.D', assets: '₹95 L', cases: 1, color: '#000080', image: '/candidates/balaji.png', predictionScore: 65 },
     { name: 'M. Selvam', party: 'PQR Union', age: 39, education: 'B.E.', assets: '₹40 L', cases: 0, color: '#0000ff', image: '/candidates/selvam.png', predictionScore: 71 },
-    { name: 'A. Priya', party: 'Independent', age: 45, education: 'MBA', assets: '₹1.2 Cr', cases: 0, color: '#e0e0e0', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya', predictionScore: 78 },
-    { name: 'R. Vignesh', party: 'Youth Front', age: 29, education: 'M.Tech', assets: '₹25 L', cases: 0, color: '#ff00ff', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Vignesh', predictionScore: 60 },
+    { name: 'A. Priya', party: 'Independent', age: 45, education: 'MBA', assets: '₹1.2 Cr', cases: 0, color: '#e0e0e0', image: '/candidates/priya.png', predictionScore: 78 },
+    { name: 'R. Vignesh', party: 'Youth Front', age: 29, education: 'M.Tech', assets: '₹25 L', cases: 0, color: '#ff00ff', image: '/candidates/vignesh.png', predictionScore: 60 },
   ];
 
   const renderContent = () => {
